@@ -13,7 +13,7 @@ const secret = 'adfnrflsiefje';
 app.use(cors({credentials:true, origin:'http://localhost:3000'}));
 app.use(express.json());
 
-mongoose.connect('mongodb+srv://syafiqzi98:sJRtpGU3wbVwTVXy@cluster0.cw6eujq.mongodb.net')
+mongoose.connect('mongodb+srv://syafiqzi98:sJRtpGU3wbVwTVXy@cluster0.cw6eujq.mongodb.net');
 
 
 
@@ -32,20 +32,18 @@ app.post('/Register', async(req, res) => {
 app.post('/login', async(req, res) => {  
   const {username, password} = req.body;
   const userDoc = await User.findOne({username});
-  const passOk = bcrypt.compareSync(password, userDoc.password);
+  const passOk = bcrypt.compareSync(password,userDoc.password);
  
   if (passOk){
     //login
     jwt.sign({username,id:userDoc._id}, secret,{}, (err, token)=> {
       if (err) throw err;
-      res.cookies('token', token).json('ok');
+      res.cookie('token', token).json({id:userDoc._id,username,});
     });
   } else {
     //not login
     res.status(400).json('Wrong credential')
   }
-
-
 }); 
 
 // var { Client } = require('pg')
